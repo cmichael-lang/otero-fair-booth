@@ -175,18 +175,30 @@
   var pollTimer = null;
 
   // ---------- server calls ----------
-  function api(fn, args) {
+  // Google occasionally answers a request with a one-off 404/5xx or a dropped
+  // connection, and a cold script can take 15-20 s, so transient failures are
+  // retried a couple of times before the user sees an error.
+  function api(fn, args, attempt) {
+    attempt = attempt || 1;
     return fetch(API, {
       method: 'POST',
       credentials: 'omit',
       redirect: 'follow',
       body: JSON.stringify({ fn: fn, args: args || [] })  // text/plain body: no CORS preflight
     }).then(function (r) {
-      if (!r.ok) throw new Error('Server error (' + r.status + ')');
+      if (!r.ok) { var e = new Error('Server error (' + r.status + ')'); e.transient = true; throw e; }
       return r.json();
+    }, function (err) {
+      var e = new Error('Network error'); e.transient = true; throw e;
     }).then(function (j) {
       if (!j || !j.ok) throw new Error((j && j.error) || 'Unexpected server response');
       return j.result;
+    }).catch(function (err) {
+      if (err.transient && attempt < 3) {
+        return new Promise(function (res) { setTimeout(res, 1500 * attempt); })
+          .then(function () { return api(fn, args, attempt + 1); });
+      }
+      throw err;
     });
   }
 
