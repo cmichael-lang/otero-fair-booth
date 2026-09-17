@@ -113,6 +113,7 @@
   .i-quote { font-style: italic; color: var(--grey); margin: 6px 0; }
   .i-p { margin: 6px 0; font-size: 14px; line-height: 1.45; }
   .i-bullet { margin: 3px 0 3px 18px; font-size: 14px; line-height: 1.4; list-style: disc; display: list-item; }
+  .i-map { display: block; width: 100%; max-width: 560px; height: auto; margin: 8px auto 12px; border: 1px solid #dde4f0; border-radius: 8px; }
 
   .footer { text-align: center; color: var(--grey); font-size: 13px; margin-top: 28px; }
   .spin { text-align: center; color: var(--grey); padding: 30px 0; }
@@ -328,6 +329,14 @@
       d.className = 'i-' + row.kind;
       d.textContent = row.text;
       el.appendChild(d);
+      // map of the route from the booth to the emergency meet-up location
+      if (/parachute plasma/i.test(row.text)) {
+        var img = document.createElement('img');
+        img.className = 'i-map';
+        img.src = 'fair-meet-up.png';
+        img.alt = 'Map: dashed route from the Witnessing Booth on Fairgrounds Rd to Parachute Plasma on N White Sands Blvd, the emergency meet-up location';
+        el.appendChild(img);
+      }
     });
   }
 
