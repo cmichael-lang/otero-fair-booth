@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Otero County Fair Booth Sign-Up</title>
+<style>
+  :root {
+    --navy: #1f3864;
+    --navy-dark: #16294a;
+    --gold: #f1c232;
+    --band: #eef2f8;
+    --red: #990000;
+    --grey: #666;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f5f6fa; color: #222; min-height: 100vh;
+  }
+  .wrap { max-width: 1100px; margin: 0 auto; padding: 0 12px 48px; }
+  .narrow { max-width: 560px; margin: 0 auto; }
+
+  /* ---------- header ---------- */
+  header { background: var(--navy); color: #fff; padding: 16px 12px 0; text-align: center; }
+  header .logo { height: 84px; max-width: 90%; object-fit: contain; }
+  header h1 { font-size: 20px; margin: 8px 0 2px; }
+  header .sub { color: var(--gold); font-size: 13px; padding-bottom: 12px; }
+  .hero { width: 100%; max-height: 160px; object-fit: cover; display: block; }
+
+  /* ---------- cards / login ---------- */
+  .card {
+    background: #fff; border-radius: var(--radius); padding: 16px;
+    margin: 16px 0; box-shadow: 0 1px 4px rgba(0,0,0,.08);
+  }
+  .card h2 { font-size: 17px; color: var(--navy); margin-bottom: 10px; }
+  label { display: block; font-size: 13px; color: var(--grey); margin: 10px 0 4px; }
+  input {
+    width: 100%; font-size: 16px; padding: 12px; border: 1px solid #ccc;
+    border-radius: 8px; background: #fff;
+  }
+  input:focus { outline: 2px solid var(--navy); border-color: var(--navy); }
+  button {
+    font-size: 16px; border: none; border-radius: 8px; padding: 13px 16px;
+    cursor: pointer; -webkit-tap-highlight-color: transparent;
+  }
+  .btn-primary { background: var(--navy); color: #fff; width: 100%; margin-top: 14px; font-weight: 600; }
+  .btn-primary:active { background: var(--navy-dark); }
+  .err { color: var(--red); font-size: 14px; margin-top: 10px; min-height: 18px; }
+
+  /* ---------- day columns ---------- */
+  .days { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; align-items: start; }
+  .dayhead {
+    background: var(--gold); color: var(--navy); font-weight: 700; font-size: 14px;
+    text-align: center; padding: 10px 6px; border-radius: 10px; margin: 4px 0 8px;
+  }
+  .dayhead .d-date { display: block; font-weight: 400; font-size: 11px; margin-top: 1px; }
+  .empty-day { color: var(--grey); font-size: 13px; text-align: center; margin: 10px 0 16px; }
+
+  .updated { font-size: 11px; color: var(--grey); text-align: right; margin: 10px 2px 6px; }
+
+  /* ---------- shifts ---------- */
+  .shift {
+    background: #fff; border-radius: var(--radius); margin: 0 0 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.07); overflow: hidden;
+  }
+  .shift-head {
+    padding: 8px 10px; background: var(--band); border-bottom: 1px solid #dde4f0;
+  }
+  .shift-head .t { font-weight: 700; color: var(--navy); font-size: 14px; }
+  .shift-head .t small { font-weight: 400; color: var(--grey); font-size: 11px; }
+  .slots { padding: 6px 8px 8px; display: flex; flex-direction: column; gap: 5px; }
+  .slot {
+    border-radius: 8px; padding: 7px 9px; font-size: 14px;
+    border: 1px solid #d8e5d8; background: #f2f8f2; color: #1b3f1b;
+    overflow-wrap: anywhere;
+  }
+  .slot .who { font-weight: 600; display: block; }
+  .slot .meta { font-size: 11px; color: var(--grey); display: block; margin-top: 1px; }
+
+  /* tighten up on phones so three columns stay readable */
+  @media (max-width: 480px) {
+    .dayhead { font-size: 12px; padding: 8px 4px; }
+    .shift-head { padding: 6px 7px; }
+    .shift-head .t { font-size: 12px; }
+    .shift-head .t small { display: none; }
+    .slots { padding: 5px 5px 6px; gap: 4px; }
+    .slot { font-size: 12px; padding: 6px 6px; }
+    .slot .meta { font-size: 10px; }
+  }
+
+  /* ---------- instructions ---------- */
+  details.instr { margin: 16px 0 4px; }
+  details.instr > summary {
+    list-style: none; cursor: pointer; background: var(--navy); color: #fff;
+    border-radius: var(--radius); padding: 14px 16px; font-weight: 700; font-size: 15px;
+  }
+  details.instr > summary::after { content: " ▾"; color: var(--gold); }
+  details.instr[open] > summary::after { content: " ▴"; }
+  .instr-body { background: #fff; border-radius: 0 0 var(--radius) var(--radius); padding: 14px 16px; }
+  .i-title { display: none; } /* page has its own header */
+  .i-alert {
+    background: #fce8e6; color: var(--red); font-weight: 700; border: 2px solid var(--red);
+    border-radius: 8px; padding: 10px 12px; margin: 10px 0;
+  }
+  .i-h1 { font-size: 16px; font-weight: 700; color: var(--navy); margin: 16px 0 4px; }
+  .i-h2 { font-size: 14px; font-weight: 700; color: var(--navy); margin: 14px 0 4px; }
+  .i-h3 { font-weight: 700; margin: 10px 0 2px; }
+  .i-quote { font-style: italic; color: var(--grey); margin: 6px 0; }
+  .i-p { margin: 6px 0; font-size: 14px; line-height: 1.45; }
+  .i-bullet { margin: 3px 0 3px 18px; font-size: 14px; line-height: 1.4; list-style: disc; display: list-item; }
+
+  .footer { text-align: center; color: var(--grey); font-size: 13px; margin-top: 28px; }
+  .spin { text-align: center; color: var(--grey); padding: 30px 0; }
+  .spin .err { text-align: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="https://www.oterocountyfair.com/wp-content/uploads/2024/04/OCFA_Logo-white.png" alt="Otero County Fair logo">
+  <h1>Booth Volunteer Schedule</h1>
+  <div class="sub">September 24–26 &bull; 11:00 a.m. – 11:00 p.m.</div>
+</header>
+<img class="hero" src="https://patch.com/img/cdn20/users/25424425/20230228/030533/styles/patch_image/public/grandprix___28145923023.jpg?width=1200" alt="Fair">
+
+<div class="wrap">
+
+  <!-- login -->
+  <div id="loginCard" class="card narrow" style="display:none">
+    <h2>Sign in</h2>
+    <label for="u">Login</label>
+    <input id="u" autocapitalize="none" autocomplete="username">
+    <label for="p">Password</label>
+    <input id="p" type="password" autocomplete="current-password">
+    <button class="btn-primary" id="loginBtn" onclick="doLogin()">Enter</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <div id="loading" class="spin" style="display:none">Loading schedule…<div class="err" id="loadErr"></div></div>
+
+  <!-- app -->
+  <div id="app" style="display:none">
+    <div class="narrow">
+      <details class="instr">
+        <summary>Instructions &amp; Safety Information</summary>
+        <div class="instr-body" id="instrBody"></div>
+      </details>
+    </div>
+
+    <div class="updated" id="updated"></div>
+    <div id="shifts" class="days"></div>
+
+    <div class="footer">
+      To sign up for a shift, or with any questions, call Connor Michael<br><a href="tel:7202179223">720-217-9223</a>
+    </div>
+  </div>
+</div>
+
+<script>
+  // The Apps Script web app that reads the Google Sheet. Requests are sent
+  // with credentials omitted, so the visitor's Google accounts are never
+  // involved (this is what avoids the "unable to open the file" error).
+  var API = 'https://script.google.com/macros/s/AKfycby5-MFkI-Sq2wx8E4grvKcHVDecwyhOI8-V-5WixRuzTr6n1Qje0QNksGyD-N2EYICH/exec';
+
+  var auth = null;
+  var data = null;          // { days: [...] }
+  var instructions = [];
+  var lastUpdated = null;
+  var pollTimer = null;
+
+  // ---------- server calls ----------
+  function api(fn, args) {
+    return fetch(API, {
+      method: 'POST',
+      credentials: 'omit',
+      redirect: 'follow',
+      body: JSON.stringify({ fn: fn, args: args || [] })  // text/plain body: no CORS preflight
+    }).then(function (r) {
+      if (!r.ok) throw new Error('Server error (' + r.status + ')');
+      return r.json();
+    }).then(function (j) {
+      if (!j || !j.ok) throw new Error((j && j.error) || 'Unexpected server response');
+      return j.result;
+    });
+  }
+
+  // ---------- boot ----------
+  window.addEventListener('load', function () {
+    var saved = null;
+    try { saved = JSON.parse(localStorage.getItem('ocf_auth')); } catch (e) {}
+    if (saved && saved.user) {
+      show('loading');
+      api('login', [saved.user, saved.pass])
+        .then(function (d) { auth = saved; onData(d, true); })
+        .catch(function (err) {
+          if (/login or password/i.test(cleanErr(err))) {
+            localStorage.removeItem('ocf_auth'); show('loginCard');
+          } else {
+            document.getElementById('loadErr').textContent =
+              'Could not reach the schedule (' + cleanErr(err) + '). Check your connection and reload.';
+          }
+        });
+    } else {
+      show('loginCard');
+    }
+  });
+
+  function show(id) {
+    ['loginCard', 'loading', 'app'].forEach(function (x) {
+      document.getElementById(x).style.display = (x === id) ? '' : 'none';
+    });
+  }
+
+  function doLogin() {
+    var u = document.getElementById('u').value.trim();
+    var p = document.getElementById('p').value;
+    var btn = document.getElementById('loginBtn');
+    btn.disabled = true; btn.textContent = 'Checking…';
+    document.getElementById('loginErr').textContent = '';
+    api('login', [u, p])
+      .then(function (d) {
+        auth = { user: u, pass: p };
+        localStorage.setItem('ocf_auth', JSON.stringify(auth));
+        btn.disabled = false; btn.textContent = 'Enter';
+        onData(d, true);
+      })
+      .catch(function (err) {
+        btn.disabled = false; btn.textContent = 'Enter';
+        document.getElementById('loginErr').textContent = cleanErr(err);
+      });
+  }
+
+  // ---------- data / polling ----------
+  function onData(d, first) {
+    data = { days: d.days };
+    if (d.instructions) { instructions = d.instructions; renderInstructions(); }
+    lastUpdated = new Date();
+    if (first) { show('app'); startPoll(); }
+    render();
+  }
+
+  function startPoll() {
+    if (pollTimer) clearInterval(pollTimer);
+    pollTimer = setInterval(function () {
+      api('getScheduleData', [auth])
+        .then(function (d) { data = { days: d.days }; lastUpdated = new Date(); render(); })
+        .catch(function () { /* transient — try again next tick */ });
+    }, 15000);
+    setInterval(renderUpdated, 5000);
+  }
+
+  // ---------- rendering ----------
+  function render() {
+    if (!data || !data.days.length) return;
+    var el = document.getElementById('shifts');
+    el.innerHTML = '';
+    data.days.forEach(function (day) { renderDay(el, day); });
+    renderUpdated();
+  }
+
+  function renderDay(el, day) {
+    var col = document.createElement('div');
+    col.className = 'daycol';
+    el.appendChild(col);
+    el = col;
+
+    var parts = day.label.split(','); // "Thursday, September 24"
+    var head = document.createElement('div');
+    head.className = 'dayhead';
+    head.innerHTML = esc(parts[0]) +
+      (parts[1] ? '<span class="d-date">' + esc(parts[1].trim()) + '</span>' : '');
+    el.appendChild(head);
+
+    var shown = 0;
+    day.shifts.forEach(function (shift) {
+      var filled = shift.slots.filter(function (s) { return s.name; });
+      if (!filled.length) return; // only display shifts someone is working
+      shown++;
+
+      var box = document.createElement('div');
+      box.className = 'shift';
+      var head = document.createElement('div');
+      head.className = 'shift-head';
+      head.innerHTML = '<div class="t">' + esc(shift.time) +
+        (shift.note ? ' <small>(' + esc(shift.note) + ')</small>' : '') + '</div>';
+      box.appendChild(head);
+
+      var slots = document.createElement('div');
+      slots.className = 'slots';
+      filled.forEach(function (slot) {
+        var row = document.createElement('div');
+        row.className = 'slot';
+        var meta = [slot.cong, slot.phone].filter(Boolean).join(' • ');
+        row.innerHTML = '<span class="who">' + esc(slot.name) + '</span>' +
+          '<span class="meta">' + esc(meta) + '</span>';
+        slots.appendChild(row);
+      });
+      box.appendChild(slots);
+      el.appendChild(box);
+    });
+
+    if (!shown) {
+      var none = document.createElement('div');
+      none.className = 'empty-day';
+      none.textContent = 'Nothing scheduled yet — check back soon.';
+      el.appendChild(none);
+    }
+  }
+
+  function renderUpdated() {
+    if (!lastUpdated) return;
+    var s = Math.round((new Date() - lastUpdated) / 1000);
+    document.getElementById('updated').textContent =
+      s < 10 ? 'Updated just now' : 'Updated ' + s + 's ago — refreshes automatically';
+  }
+
+  function renderInstructions() {
+    var el = document.getElementById('instrBody');
+    el.innerHTML = '';
+    instructions.forEach(function (row) {
+      if (row.kind === 'gap' || row.kind === 'title') return;
+      var d = document.createElement('div');
+      d.className = 'i-' + row.kind;
+      d.textContent = row.text;
+      el.appendChild(d);
+    });
+  }
+
+  // ---------- utils ----------
+  function cleanErr(err) {
+    return String(err && err.message || err).replace(/^Error:\s*/, '');
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  document.getElementById('p').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') doLogin();
+  });
+</script>
+</body>
+</html>
